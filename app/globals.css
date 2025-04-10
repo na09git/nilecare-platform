@@ -1,0 +1,306 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-sans {
+  font-family: "PT Sans", sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+  }
+}
+
+.linear-bg {
+  background: url("/bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.react-date-picker__wrapper {
+  border: 0px !important;
+}
+
+/* .react-date-picker__inputGroup__divider {
+  display: none !important;
+}
+.react-date-picker__inputGroup__input::placeholder {
+  visibility: hidden;
+} */
+.react-date-picker__calendar-button__icon .react-date-picker__button__icon {
+  color: white;
+}
+
+.parsed-html h1 {
+  @apply text-2xl font-bold my-2;
+}
+
+.parsed-html h2 {
+  @apply text-xl font-bold my-2;
+}
+
+.parsed-html h3 {
+  @apply text-lg font-bold my-2;
+}
+
+.parsed-html h4 {
+  @apply text-base font-bold my-4;
+}
+
+.parsed-html p {
+  @apply text-base leading-relaxed my-2;
+}
+
+.parsed-html img {
+  @apply max-w-full h-auto my-4 block;
+}
+
+.parsed-html code {
+  @apply bg-gray-100 px-2 py-1 rounded font-mono;
+}
+
+.parsed-html ul {
+  @apply list-disc my-4 pl-8;
+}
+
+.parsed-html ul li {
+  @apply my-2;
+}
+
+.parsed-html ol {
+  @apply list-decimal my-4 pl-8;
+}
+
+.parsed-html ol li {
+  @apply my-2;
+}
+
+.parsed-html blockquote {
+  @apply border-l-4 border-gray-300 pl-4 my-4 text-gray-600 italic;
+}
+
+.parsed-html pre {
+  @apply bg-gray-100 p-4 rounded overflow-x-auto font-mono;
+}
+
+.parsed-html a {
+  @apply text-blue-600 no-underline hover:underline;
+}
+
+.parsed-html table {
+  @apply border-collapse w-full my-4;
+}
+
+.parsed-html th,
+.parsed-html td {
+  @apply border border-gray-300 px-2 py-1 text-left;
+}
+
+.parsed-html th {
+  @apply bg-gray-100 font-bold;
+}
+
+/* .novel-list-disc {
+  list-style: circle;
+} */
+
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.peer-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.prescription-list {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.prescription-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.prescription-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.control-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.control-button {
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: #4b5563;
+  transition: background-color 0.2s;
+}
+
+.control-button:hover {
+  background-color: #6b7280;
+}
+
+.leave-button {
+  background-color: #dc2626;
+}
+
+.leave-button:hover {
+  background-color: #ef4444;
+}
+
+
+/* PaymentSuccessNotification */
+.payment-processing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* Full viewport height */
+  background-color: #f9f9f9;
+  /* Light background color */
+}
+
+.processing-message {
+  text-align: center;
+}
+
+.processing-title {
+  font-size: 2rem;
+  color: #333;
+  /* Darker text for better readability */
+}
+
+.processing-description {
+  font-size: 1.2rem;
+  color: #666;
+  /* Slightly lighter text */
+  margin-bottom: 20px;
+  /* Space below the paragraph */
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  /* Light grey */
+  border-top: 8px solid #3498db;
+  /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  /* Animation for spinning effect */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

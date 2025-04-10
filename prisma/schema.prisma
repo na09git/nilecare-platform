@@ -1,0 +1,253 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  DOCTOR
+}
+
+model Service {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  doctors        User[]
+  title          String
+  slug           String          @unique
+  imageUrl       String
+  doctorProfiles DoctorProfile[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Speciality {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  doctors        User[]
+  title          String
+  slug           String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  doctorProfiles DoctorProfile[]
+}
+
+model Symptom {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inbox {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  recieverId  String
+  senderId    String
+  senderName  String
+  senderEmail String
+  subject     String
+  body        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AppointmentStatus {
+  pending
+  rejected
+  approved
+}
+
+model Appointment {
+  id                       String            @id @default(auto()) @map("_id") @db.ObjectId
+  appointmentDate          DateTime?
+  appointmentFormattedDate String
+  doctorId                 String
+  doctorName               String?
+  patientId                String
+  charge                   Int
+  appointmentTime          String?
+  // Patient details
+  firstName                String?
+  lastName                 String?
+  gender                   String?
+  phone                    String?
+  email                    String?
+  dob                      DateTime?
+  location                 String?
+  appointmentReason        String?
+  medicalDocuments         String[]
+  occupation               String?
+  status                   AppointmentStatus @default(approved)
+  meetingLink              String            @default("")
+  meetingProvider          String            @default("Direct-Meeting")
+
+  transactionId String?
+  reference     String?
+  paymentStatus PaymentStatus @default(SUCCESS)
+  paymentMethod String?
+  paidAmount    Int?
+
+  sales     Sale[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model Sale {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  appointmentId String @db.ObjectId
+  doctorId      String
+  doctorName    String
+  patientId     String
+  patientName   String
+  totalAmount   Int // the total amount paid for doctor
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+}
+
+model User {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  slug          String         @default("slug")
+  email         String         @unique
+  phone         String
+  emailVerified DateTime?
+  image         String?
+  role          UserRole       @default(USER)
+  plan          String?
+  password      String
+  accounts      Account[]
+  sessions      Session[]
+  symptomIds    String[]
+  doctorProfile DoctorProfile?
+
+  serviceId String?  @db.ObjectId
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  specialityId String?     @db.ObjectId
+  speciality   Speciality? @relation(fields: [specialityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  isVerfied Boolean  @default(false)
+  token     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DoctorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Availability {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  doctorProfileId String        @unique @db.ObjectId
+  doctorProfile   DoctorProfile @relation(fields: [doctorProfileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  monday          String[]
+  tuesday         String[]
+  wednesday       String[]
+  thursday        String[]
+  friday          String[]
+  saturday        String[]
+  sunday          String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DoctorProfile {
+  id                   String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId               String        @unique @db.ObjectId
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status               DoctorStatus  @default(PENDING)
+  trackingNumber       String        @unique
+  firstName            String
+  lastName             String
+  middleName           String?
+  dob                  DateTime?
+  gender               String?
+  page                 String?
+  availability         Availability?
+  profilePicture       String?
+  bio                  String?
+  medicalLicense       String?
+  medicalLicenseExpiry DateTime?
+  yearsOfExperience    Int?
+
+  email                    String?
+  phone                    String?
+  country                  String?
+  city                     String?
+  state                    String?
+  medicalSchool            String?
+  graduationYear           String?
+  primarySpecialization    String?
+  otherSpecialties         String[]
+  boardCertificates        String[]
+  hospitalName             String?
+  hospitalAddress          String?
+  hospitalContactNumber    String?
+  hospitalEmailAddress     String?
+  hospitalWebsite          String?
+  hospitalHoursOfOperation Int?
+  servicesOffered          String[]
+  insuranceAccepted        String?
+  educationHistory         String?
+  research                 String?
+  accomplishments          String?
+  additionalDocs           String[]
+  operationMode            String?     @default("Telehealth visit")
+  hourlyWage               Int         @default(100)
+  //SERVICES
+  serviceId                String?     @db.ObjectId
+  service                  Service?    @relation(fields: [serviceId], references: [id])
+  specialtyId              String?     @db.ObjectId
+  specialty                Speciality? @relation(fields: [specialtyId], references: [id])
+  symptomIds               String[]    @db.ObjectId
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime?   @updatedAt
+}
